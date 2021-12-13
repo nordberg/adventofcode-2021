@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 pub fn fold(points: Vec<(i32, i32)>, mut folds: Vec<(String, i32)>) {
     if folds.is_empty() {
         let grid = points_to_grid(&points);
@@ -171,3 +173,29 @@ mod split_tests {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+enum FoldDirection {
+    Vertical,
+    Horizontal,
+}
+
+fn fold_paper(points: &HashSet<(i32, i32)>, fold_at: i32, fold_direction: FoldDirection) -> HashSet<(i32, i32)> {
+    points.iter().map(|(x, y)| {
+        match fold_direction {
+            FoldDirection::Vertical => {
+                if *x > fold_at {
+                    (fold_at - (*x - fold_at), *y)
+                } else {
+                    (*x, *y)
+                }
+            }
+            FoldDirection::Horizontal => {
+                if *y > fold_at {
+                    (*x, fold_at - (*y - fold_at))
+                } else {
+                    (*x, *y)
+                }
+            }
+        }
+    }).collect::<HashSet<(i32, i32)>>()
+}
