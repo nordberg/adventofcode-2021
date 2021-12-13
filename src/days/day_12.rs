@@ -31,11 +31,7 @@ fn main() -> io::Result<()> {
             .or_insert(vec![c11.clone()]);
     }
 
-    let answer = calculate_entry_count(
-        "start",
-        &cave_connections,
-        HashMap::new(),
-    );
+    let answer = calculate_entry_count("start", &cave_connections, HashMap::new());
 
     println!("{:?}", answer);
     Ok(())
@@ -51,7 +47,10 @@ fn calculate_entry_count<'a>(
     }
 
     if current_node.chars().all(|c| c.is_ascii_lowercase()) {
-        visited.entry(current_node.to_string()).and_modify(|v| *v += 1).or_insert(1);
+        visited
+            .entry(current_node.to_string())
+            .and_modify(|v| *v += 1)
+            .or_insert(1);
     }
 
     let mut result: i64 = 0;
@@ -66,11 +65,7 @@ fn calculate_entry_count<'a>(
                 continue;
             }
         }
-        result += calculate_entry_count(
-            node,
-            connections,
-            visited.clone(),
-        );
+        result += calculate_entry_count(node, connections, visited.clone());
     }
 
     result

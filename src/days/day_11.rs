@@ -1,5 +1,5 @@
-use std::collections::HashSet;
 use crate::get_adjacent;
+use std::collections::HashSet;
 
 const PART_TWO: bool = false;
 
@@ -21,20 +21,29 @@ fn print_oct(oct: &[u32], width: usize) {
         if i % width == 0 {
             print!("\n");
         }
-        let xx = if oct[i] < 10 { oct[i].to_string() } else { "#".to_string() };
+        let xx = if oct[i] < 10 {
+            oct[i].to_string()
+        } else {
+            "#".to_string()
+        };
         print!("{}", xx);
     }
     println!("\n");
 }
 
-fn flash_octo(oct: &mut Vec<u32>, width: usize, flashes: usize, mut flashing: HashSet<usize>) -> usize {
+fn flash_octo(
+    oct: &mut Vec<u32>,
+    width: usize,
+    flashes: usize,
+    mut flashing: HashSet<usize>,
+) -> usize {
     let mut something_flashed = false;
-    let mut fff = 0;
+    let mut flashes_in_this_step = 0;
     for i in 0..oct.len() {
         if oct[i] > 9 && !flashing.contains(&i) {
             oct[i] = 0;
             something_flashed = true;
-            fff += 1;
+            flashes_in_this_step += 1;
             flashing.insert(i);
 
             let adj = get_adjacent(oct.as_slice(), i, width, true);
@@ -54,9 +63,9 @@ fn flash_octo(oct: &mut Vec<u32>, width: usize, flashes: usize, mut flashing: Ha
     }
 
     return if something_flashed {
-        flash_octo(oct, width, flashes + fff, flashing)
+        flash_octo(oct, width, flashes + flashes_in_this_step, flashing)
     } else {
-        flashes + fff
+        flashes + flashes_in_this_step
     };
 }
 
@@ -67,18 +76,10 @@ mod tests {
     #[test]
     fn test_flash_octo() {
         let mut oct = vec![
-            1, 1, 1, 1, 1,
-            1, 9, 9, 9, 1,
-            1, 9, 1, 9, 1,
-            1, 9, 9, 9, 1,
-            1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 9, 9, 9, 1, 1, 9, 1, 9, 1, 1, 9, 9, 9, 1, 1, 1, 1, 1, 1,
         ];
         let expected_oct = vec![
-            4, 5, 6, 5, 4,
-            5, 1, 1, 1, 5,
-            6, 1, 1, 1, 6,
-            5, 1, 1, 1, 5,
-            4, 5, 6, 5, 4,
+            4, 5, 6, 5, 4, 5, 1, 1, 1, 5, 6, 1, 1, 1, 6, 5, 1, 1, 1, 5, 4, 5, 6, 5, 4,
         ];
         let actual_oct = super::count_flashes(oct, 5, 3);
         print_oct(actual_oct.as_slice(), 5);
@@ -89,18 +90,10 @@ mod tests {
     #[test]
     fn test_flash_octo2() {
         let mut oct = vec![
-            1, 1, 1, 1, 1,
-            1, 9, 9, 9, 1,
-            1, 9, 1, 9, 1,
-            1, 9, 9, 9, 1,
-            1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 9, 9, 9, 1, 1, 9, 1, 9, 1, 1, 9, 9, 9, 1, 1, 1, 1, 1, 1,
         ];
         let expected_oct = vec![
-            3, 4, 5, 4, 3,
-            4, 0, 0, 0, 4,
-            5, 0, 0, 0, 5,
-            4, 0, 0, 0, 4,
-            3, 4, 5, 4, 3,
+            3, 4, 5, 4, 3, 4, 0, 0, 0, 4, 5, 0, 0, 0, 5, 4, 0, 0, 0, 4, 3, 4, 5, 4, 3,
         ];
         let actual_oct = super::count_flashes(oct, 5, 1);
         print_oct(actual_oct.as_slice(), 5);

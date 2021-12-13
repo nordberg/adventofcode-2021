@@ -27,22 +27,23 @@ fn get_steps() -> io::Result<()> {
         for crab_position in positions.iter() {
             let steps = (crab_position.clone() - available_positions).abs();
             let fuel = (steps * (steps + 1)) / 2;
-            my_map.entry(available_positions).and_modify(|e| *e += fuel).or_insert(fuel);
+            my_map
+                .entry(available_positions)
+                .and_modify(|e| *e += fuel)
+                .or_insert(fuel);
         }
     }
 
     let answer = my_map.values().min().unwrap().clone();
 
-
     println!("{:?}", answer);
     Ok(())
-
 }
 
 #[derive(Debug)]
 struct BingoCard {
     rows: Vec<Vec<i32>>,
-    has_won: bool
+    has_won: bool,
 }
 
 impl BingoCard {
@@ -63,11 +64,15 @@ impl BingoCard {
             columns.push(column);
         }
 
-        columns.iter().any(|column| column.iter().all(|number| bingo_numbers.contains(number)))
+        columns
+            .iter()
+            .any(|column| column.iter().all(|number| bingo_numbers.contains(number)))
     }
 
     fn has_horizontal_bingo(&self, bingo_numbers: HashSet<i32>) -> bool {
-        self.rows.iter().any(|row| row.iter().all(|&n| bingo_numbers.contains(&n)))
+        self.rows
+            .iter()
+            .any(|row| row.iter().all(|&n| bingo_numbers.contains(&n)))
     }
 
     fn has_diagonal_bingo(&self, bingo_numbers: HashSet<i32>) -> bool {
@@ -79,11 +84,17 @@ impl BingoCard {
             diagonal_row2.push(self.rows[i][row_size - i - 1].clone());
         }
 
-        diagonal_row.iter().all(|&n| bingo_numbers.contains(&n)) || diagonal_row2.iter().all(|&n| bingo_numbers.contains(&n))
+        diagonal_row.iter().all(|&n| bingo_numbers.contains(&n))
+            || diagonal_row2.iter().all(|&n| bingo_numbers.contains(&n))
     }
 
     fn numbers_not_in_bingo(&self, bingo_numbers: HashSet<i32>) -> Vec<i32> {
-        self.rows.iter().flat_map(|row| row.iter()).filter(|&n| !bingo_numbers.contains(&n)).cloned().collect()
+        self.rows
+            .iter()
+            .flat_map(|row| row.iter())
+            .filter(|&n| !bingo_numbers.contains(&n))
+            .cloned()
+            .collect()
     }
 
     fn win(&mut self) {
@@ -97,7 +108,13 @@ fn bingo() -> io::Result<()> {
 
     let mut reader_lines = reader.lines();
 
-    let bingo_numbers = reader_lines.next().unwrap().unwrap().split(",").map(|x| x.parse::<i32>().unwrap()).collect::<Vec<i32>>();
+    let bingo_numbers = reader_lines
+        .next()
+        .unwrap()
+        .unwrap()
+        .split(",")
+        .map(|x| x.parse::<i32>().unwrap())
+        .collect::<Vec<i32>>();
     reader_lines.next();
 
     let mut bingo_cards = vec![];
@@ -108,11 +125,19 @@ fn bingo() -> io::Result<()> {
             reader_lines.next(),
             reader_lines.next(),
             reader_lines.next(),
-            reader_lines.next()
+            reader_lines.next(),
         ];
-        let mut bingo_card = BingoCard { rows: vec![], has_won: false };
+        let mut bingo_card = BingoCard {
+            rows: vec![],
+            has_won: false,
+        };
         for line in lines {
-            let numbers = line.unwrap().unwrap().split_whitespace().map(|x| x.parse::<i32>().unwrap()).collect::<Vec<i32>>();
+            let numbers = line
+                .unwrap()
+                .unwrap()
+                .split_whitespace()
+                .map(|x| x.parse::<i32>().unwrap())
+                .collect::<Vec<i32>>();
             bingo_card.rows.push(numbers);
         }
         bingo_cards.push(bingo_card);
@@ -133,7 +158,13 @@ fn bingo() -> io::Result<()> {
 
             if card.has_bingo(bingo_numbers_set.clone()) {
                 println!("{:?}", card);
-                println!("{:?}", card.numbers_not_in_bingo(bingo_numbers_set.clone()).iter().sum::<i32>() * number);
+                println!(
+                    "{:?}",
+                    card.numbers_not_in_bingo(bingo_numbers_set.clone())
+                        .iter()
+                        .sum::<i32>()
+                        * number
+                );
                 card.win();
             }
         }
