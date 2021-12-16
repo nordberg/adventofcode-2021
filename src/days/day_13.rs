@@ -90,7 +90,6 @@ fn print_paper(paper: &Vec<Vec<i32>>) {
 #[cfg(test)]
 mod test_fold_row {
     use crate::days::day_13::fold_rows;
-    use crate::fold_rows;
 
     #[test]
     fn test_folding_row() {
@@ -162,7 +161,6 @@ mod test_fold_row {
 #[cfg(test)]
 mod split_tests {
     use crate::days::day_13::split_vec_and_reverse_right;
-    use crate::split_vec_and_reverse_right;
 
     #[test]
     fn test_split_vec_and_reverse_right() {
