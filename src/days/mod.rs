@@ -7,3 +7,6 @@ pub(crate) mod day_6;
 pub(crate) mod day_7;
 pub mod day_13;
 pub mod day_5;
+pub mod day_14;
+pub mod day_9;
+pub mod day_15;
