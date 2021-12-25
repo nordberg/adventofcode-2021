@@ -56,7 +56,13 @@ impl Projectile {
         self.y_velocity = self.y_velocity - 1;
     }
 
-    fn get_steps_until_out_of_bounds(&mut self, lo_x: i32, hi_x: i32, lo_y: i32, hi_y: i32) -> Option<Vec<(i32, i32)>> {
+    fn get_steps_until_out_of_bounds(
+        &mut self,
+        lo_x: i32,
+        hi_x: i32,
+        lo_y: i32,
+        hi_y: i32,
+    ) -> Option<Vec<(i32, i32)>> {
         let mut steps = Vec::new();
 
         while self.x <= hi_x && self.y >= lo_y {
@@ -64,10 +70,15 @@ impl Projectile {
             self.step();
         }
 
-        let is_correct = steps.iter().any(|(x, y)| *x >= lo_x && *x <= hi_x && *y <= hi_y && *y >= lo_y);
+        let is_correct = steps
+            .iter()
+            .any(|(x, y)| *x >= lo_x && *x <= hi_x && *y <= hi_y && *y >= lo_y);
         if is_correct {
             println!("-----------------");
-            println!("Solution found with x_velocity: {} and y_velocity: {}", self.start_x_vel, self.start_y_vel);
+            println!(
+                "Solution found with x_velocity: {} and y_velocity: {}",
+                self.start_x_vel, self.start_y_vel
+            );
             println!("Max y: {}", steps.iter().max_by_key(|(x, y)| *y).unwrap().1);
             //print_trajectory(lo_x, lo_y, hi_x, hi_y, &steps);
             Some(steps)

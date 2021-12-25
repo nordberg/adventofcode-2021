@@ -9,14 +9,10 @@ pub fn solve_day_20(input: &str) {
     let algo = algo_str
         .trim()
         .chars()
-        .flat_map(|c| {
-            if c == '#' {
-                Option::Some(1)
-            } else if c == '.' {
-                Option::Some(0)
-            } else {
-                Option::None
-            }
+        .flat_map(|c| match c {
+            '#' => Some(1),
+            '.' => Some(0),
+            _ => None,
         })
         .collect::<Vec<_>>();
 

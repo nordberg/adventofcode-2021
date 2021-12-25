@@ -46,7 +46,7 @@ fn flash_octo(
             flashes_in_this_step += 1;
             flashing.insert(i);
 
-            let adj = get_adjacent(oct.as_slice(), i, width, true);
+            let adj = get_adjacent(oct.as_slice(), i, width, true, false);
 
             for a in adj {
                 if !flashing.contains(&a) {

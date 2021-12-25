@@ -1,13 +1,13 @@
-use std::cmp::{max, min, Reverse};
-use std::collections::{BinaryHeap, BTreeMap, BTreeSet, HashMap, HashSet};
 use crate::get_adjacent;
+use std::cmp::{max, min};
+use std::collections::{BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 pub fn solve_day_15(input: &str) {
-    let mut points: Vec<u32> = vec![];
+    let mut points = vec![];
     let mut width = 0;
 
-    for (i, line) in input.lines().enumerate() {
+    for (_, line) in input.lines().enumerate() {
         let mut line_points = vec![];
         line.chars().for_each(|c| {
             line_points.push(c.to_digit(10).unwrap());
@@ -15,7 +15,11 @@ pub fn solve_day_15(input: &str) {
 
         let mut adds = vec![];
         for i in 1..=4 {
-            let copied = line_points.clone().iter().map(|x| do_this(i, x)).collect::<Vec<u32>>();
+            let copied = line_points
+                .clone()
+                .iter()
+                .map(|x| do_this(i, x))
+                .collect::<Vec<u32>>();
             adds.push(copied);
         }
 
@@ -30,7 +34,11 @@ pub fn solve_day_15(input: &str) {
     let mut adds = vec![];
 
     for i in 1..=4 {
-        let nex = points.clone().iter().map(|x| do_this(i, x)).collect::<Vec<u32>>();
+        let nex = points
+            .clone()
+            .iter()
+            .map(|x| do_this(i, x))
+            .collect::<Vec<u32>>();
         adds.push(nex);
     }
 
@@ -49,15 +57,14 @@ pub fn solve_day_15(input: &str) {
 fn lowest_risk_to_end(points: &[u32], width: usize) -> Option<u32> {
     let end_point = points.len() - 1;
     let mut lowest_so_far = HashMap::new();
-    let mut b_heap = BinaryHeap::new();
-    b_heap.push(Reverse((0, 0)));
 
-    lowest_so_far.insert(0, 0);  // 0 is the start point
+    lowest_so_far.insert(0, 0); // 0 is the start point
 
     let mut visited = HashSet::new();
 
     loop {
-        let lowest_idx = lowest_so_far.iter()
+        let lowest_idx = lowest_so_far
+            .iter()
             .filter(|(i, _)| !visited.contains(*i))
             .min_by(|(_, a), (_, b)| a.cmp(b))
             .unwrap()
@@ -66,13 +73,17 @@ fn lowest_risk_to_end(points: &[u32], width: usize) -> Option<u32> {
 
         visited.insert(lowest_idx);
 
-        let adj = get_adjacent(&points, lowest_idx, width, false);
+        let adj = get_adjacent(&points, lowest_idx, width, false, false);
 
-        let new_risks_for_adj = adj.iter().filter(|i| !visited.contains(*i)).map(|&i| {
-            let risk_to_i = lowest_so_far.get(&i).unwrap_or(&u32::MAX).clone();
-            let risk_until_here = lowest_so_far.get(&lowest_idx).unwrap_or(&u32::MAX).clone();
-            (i, min(risk_to_i, risk_until_here + points[i]))
-        }).collect::<Vec<(usize, u32)>>();
+        let new_risks_for_adj = adj
+            .iter()
+            .filter(|i| !visited.contains(*i))
+            .map(|&i| {
+                let risk_to_i = lowest_so_far.get(&i).unwrap_or(&u32::MAX).clone();
+                let risk_until_here = lowest_so_far.get(&lowest_idx).unwrap_or(&u32::MAX).clone();
+                (i, min(risk_to_i, risk_until_here + points[i]))
+            })
+            .collect::<Vec<(usize, u32)>>();
 
         for (j, risk) in new_risks_for_adj {
             lowest_so_far.insert(j, risk);
@@ -87,14 +98,13 @@ fn lowest_risk_to_end(points: &[u32], width: usize) -> Option<u32> {
 }
 
 fn do_this(i: u32, x: &u32) -> u32 {
-    let res = (x + i) % 9 ;
+    let res = (x + i) % 9;
     if res == 0 {
         9
     } else {
         res
     }
 }
-
 
 /// Print grid from vector of points
 fn print_grid(points: &Vec<u32>, width: usize) {
@@ -106,16 +116,23 @@ fn print_grid(points: &Vec<u32>, width: usize) {
     }
 }
 
-fn lowest_risk(points: &[u32], current_point: usize, goal: usize, width: usize, mut visited: HashSet<usize>) -> u32 {
+fn lowest_risk(
+    points: &[u32],
+    current_point: usize,
+    goal: usize,
+    width: usize,
+    mut visited: HashSet<usize>,
+) -> u32 {
     if current_point == goal {
         return 0;
     }
     visited.insert(current_point);
 
-    points[current_point] + get_adjacent(points, current_point, width, false)
-        .iter()
-        .filter(|i| !visited.contains(i))
-        .map(|i| lowest_risk(points, *i, goal, width, visited.clone()))
-        .min()
-        .unwrap_or(0)
+    points[current_point]
+        + get_adjacent(points, current_point, width, false, false)
+            .iter()
+            .filter(|i| !visited.contains(i))
+            .map(|i| lowest_risk(points, *i, goal, width, visited.clone()))
+            .min()
+            .unwrap_or(0)
 }

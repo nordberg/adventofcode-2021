@@ -14,30 +14,39 @@ pub fn solve_day_14(input: &str) {
         let mut ccc = key.chars();
         let char1 = ccc.next().unwrap();
         let char2 = ccc.next().unwrap();
-        let unwraps_to = format!("{}{}{}", char1.to_string(), value.to_string(), char2.to_string());
+        let unwraps_to = format!(
+            "{}{}{}",
+            char1.to_string(),
+            value.to_string(),
+            char2.to_string()
+        );
         rules.insert((char1, char2), unwraps_to);
     }
 
     let result = solve_solve_part_2(String::from(start_chunk), rules, 0);
 
-/*    let mut result_map = HashMap::new();
-    result.chars().for_each(|c| {
-        result_map.entry(c).and_modify(|e| *e += 1).or_insert(1);
-    });
+    /*    let mut result_map = HashMap::new();
+        result.chars().for_each(|c| {
+            result_map.entry(c).and_modify(|e| *e += 1).or_insert(1);
+        });
 
-    let mut minn = result_map.values().min().unwrap();
-    let mut maxx = result_map.values().max().unwrap();
+        let mut minn = result_map.values().min().unwrap();
+        let mut maxx = result_map.values().max().unwrap();
 
-    println!("{:?}", (maxx - minn));
-*/}
+        println!("{:?}", (maxx - minn));
+    */
+}
 
 fn solve_solve_part_2(input: String, rules: HashMap<(char, char), String>, steps: i32) -> String {
     let mut counter: HashMap<(char, char), i64> = HashMap::new();
     let chars = input.chars().collect::<Vec<_>>();
 
     chars.windows(2).for_each(|w| {
-       let char_window = (w[0], w[1]);
-        counter.entry(char_window).and_modify(|e| *e += 1).or_insert(1);
+        let char_window = (w[0], w[1]);
+        counter
+            .entry(char_window)
+            .and_modify(|e| *e += 1)
+            .or_insert(1);
     });
 
     for _ in 0..40 {
@@ -52,7 +61,10 @@ fn solve_solve_part_2(input: String, rules: HashMap<(char, char), String>, steps
             adds.push((*char_pair, -count));
         }
         for (entry, add) in adds {
-            counter.entry(entry).and_modify(|e| *e += add).or_insert(add);
+            counter
+                .entry(entry)
+                .and_modify(|e| *e += add)
+                .or_insert(add);
         }
     }
 
@@ -61,8 +73,14 @@ fn solve_solve_part_2(input: String, rules: HashMap<(char, char), String>, steps
     let mut count_by_char = HashMap::new();
 
     counter.iter().for_each(|(k, v)| {
-        count_by_char.entry(k.0).and_modify(|e| *e += *v).or_insert(*v);
-        count_by_char.entry(k.1).and_modify(|e| *e += *v).or_insert(*v);
+        count_by_char
+            .entry(k.0)
+            .and_modify(|e| *e += *v)
+            .or_insert(*v);
+        count_by_char
+            .entry(k.1)
+            .and_modify(|e| *e += *v)
+            .or_insert(*v);
     });
 
     //count_by_char.entry('N').and_modify(|e| *e -= 1).or_insert(0);
@@ -94,7 +112,11 @@ fn solve_solve_part_2(input: String, rules: HashMap<(char, char), String>, steps
     String::new()
 }
 
-fn solve_solve_part_1(mut input: String, rules: &HashMap<(char, char), String>, steps: i32) -> String {
+fn solve_solve_part_1(
+    mut input: String,
+    rules: &HashMap<(char, char), String>,
+    steps: i32,
+) -> String {
     println!("{}", steps);
     if steps == 40 {
         return input;

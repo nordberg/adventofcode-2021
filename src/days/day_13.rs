@@ -10,9 +10,7 @@ pub fn fold(points: Vec<(i32, i32)>, mut folds: Vec<(String, i32)>) {
     let grid = points_to_grid(&points);
 
     let result_points = match x_or_y_fold.as_str() {
-        "x" => {
-            fold_rows(fold_at, &grid, false)
-        }
+        "x" => fold_rows(fold_at, &grid, false),
         "y" => {
             let transposed_grid = transpose_grid(&grid);
             fold_rows(fold_at, &transposed_grid, true)
@@ -48,7 +46,6 @@ fn fold_rows(fold_at: i32, grid: &Vec<Vec<i32>>, is_transposed: bool) -> Vec<(i3
     }
     result
 }
-
 
 fn transpose_grid(grid: &Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     let mut transposed_grid = vec![vec![0; grid.len()]; grid[0].len()];
@@ -94,27 +91,16 @@ mod test_fold_row {
     #[test]
     fn test_folding_row() {
         let fold_at = 2;
-        let grid = vec![
-            vec![0, 1, 0, 0],
-            vec![0, 0, 1, 1],
-            vec![0, 1, 0, 0],
-        ];
+        let grid = vec![vec![0, 1, 0, 0], vec![0, 0, 1, 1], vec![0, 1, 0, 0]];
 
         let folded_grid = fold_rows(fold_at, &grid, false);
 
-        assert_eq!(folded_grid, vec![
-            (1, 0),
-            (0, 1),
-            (1, 1),
-            (1, 2)
-        ]);
+        assert_eq!(folded_grid, vec![(1, 0), (0, 1), (1, 1), (1, 2)]);
     }
 
     fn test_folding_minimal_grid() {
         let fold_at = 1;
-        let grid = vec![
-            vec![0, 1],
-        ];
+        let grid = vec![vec![0, 1]];
 
         let folded_grid = fold_rows(fold_at, &grid, false);
 
@@ -123,10 +109,7 @@ mod test_fold_row {
 
     fn test_folding_minimal_grid_with_rows() {
         let fold_at = 1;
-        let grid = vec![
-            vec![0, 1],
-            vec![0, 1]
-        ];
+        let grid = vec![vec![0, 1], vec![0, 1]];
 
         let folded_grid = fold_rows(fold_at, &grid, false);
 
@@ -135,10 +118,7 @@ mod test_fold_row {
 
     fn test_folding_minimal_grid_with_rows_left_ones() {
         let fold_at = 1;
-        let grid = vec![
-            vec![1, 0],
-            vec![1, 0]
-        ];
+        let grid = vec![vec![1, 0], vec![1, 0]];
 
         let folded_grid = fold_rows(fold_at, &grid, false);
 
@@ -147,10 +127,7 @@ mod test_fold_row {
 
     fn test_folding_minimal_grid_with_rows_only_ones() {
         let fold_at = 0;
-        let grid = vec![
-            vec![1, 1],
-            vec![1, 1]
-        ];
+        let grid = vec![vec![1, 1], vec![1, 1]];
 
         let folded_grid = fold_rows(fold_at, &grid, false);
 
@@ -177,9 +154,14 @@ enum FoldDirection {
     Horizontal,
 }
 
-fn fold_paper(points: &HashSet<(i32, i32)>, fold_at: i32, fold_direction: FoldDirection) -> HashSet<(i32, i32)> {
-    points.iter().map(|(x, y)| {
-        match fold_direction {
+fn fold_paper(
+    points: &HashSet<(i32, i32)>,
+    fold_at: i32,
+    fold_direction: FoldDirection,
+) -> HashSet<(i32, i32)> {
+    points
+        .iter()
+        .map(|(x, y)| match fold_direction {
             FoldDirection::Vertical => {
                 if *x > fold_at {
                     (fold_at - (*x - fold_at), *y)
@@ -194,6 +176,6 @@ fn fold_paper(points: &HashSet<(i32, i32)>, fold_at: i32, fold_direction: FoldDi
                     (*x, *y)
                 }
             }
-        }
-    }).collect::<HashSet<(i32, i32)>>()
+        })
+        .collect::<HashSet<(i32, i32)>>()
 }
