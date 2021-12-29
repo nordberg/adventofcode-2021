@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 strum = "0.23.0"
 strum_macros = "0.23.1"
+memoize = "0.1.9"
+lazy_static = "1.4.0"

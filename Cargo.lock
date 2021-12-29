@@ -6,6 +6,8 @@ version = 3
 name = "AdventOfCodeRust"
 version = "0.1.0"
 dependencies = [
+ "lazy_static",
+ "memoize",
  "strum",
  "strum_macros",
 ]
@@ -17,6 +19,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6d621efb26863f0e9924c6ac577e8275e5e6b77455db64ffa6c65c904e9e132c"
 dependencies = [
  "unicode-segmentation",
+]
+
+[[package]]
+name = "lazy_static"
+version = "1.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
+
+[[package]]
+name = "memoize"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bb49e4361c7534fd1fd1d4a1da51b1bb4b254c5ebc519fc4e5dce578fd69f5d9"
+dependencies = [
+ "lazy_static",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
